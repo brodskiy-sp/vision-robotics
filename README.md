@@ -75,7 +75,7 @@ These experiments establish the foundation for subsequent object detection and t
 ## System Architecture
 
 
-graph TD;
+flowchart TD;
     A[SC3336 Camera] --> B[Luckfox Pico Plus];
     B --> C[Rockchip RV1103];
     C --> D[Embedded Linux];
