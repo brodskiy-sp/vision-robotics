@@ -73,9 +73,6 @@ An initial color segmentation experiment successfully isolated a green object fr
 These experiments establish the foundation for subsequent object detection and tracking.
 
 ## System Architecture
-
-
-flowchart TD;
    ```mermaid
 flowchart TD
 
