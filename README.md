@@ -76,18 +76,33 @@ These experiments establish the foundation for subsequent object detection and t
 
 
 flowchart TD;
-    A[SC3336 Camera] --> B[Luckfox Pico Plus];
-    B --> C[Rockchip RV1103];
-    C --> D[Embedded Linux];
-    D --> E[RTSP Stream];
-    E --> F[Windows PC];
-    F --> G[FFmpeg and OpenCV];
-    G --> H[Image Processing];
-    H --> I[HSV Segmentation];
-    I --> J[Binary Mask];
-    J --> K[Object Tracking];
-    K --> L[Gesture Recognition];
-    L --> M[Human Robot Interaction];
+   ```mermaid
+flowchart TD
+
+    A["SC3336 Camera"] --> B["Luckfox Pico Plus"]
+
+    B --> C["Rockchip RV1103 - Embedded Linux"]
+
+    C --> D["RTSP Video Stream"]
+
+    D --> E["Windows PC"]
+
+    E --> F["FFmpeg + OpenCV"]
+
+    F --> G["Decoded Frames"]
+
+    G --> H["Image Processing"]
+
+    H --> I["HSV Segmentation"]
+
+    I --> J["Binary Mask"]
+
+    J --> K["Object Detection and Tracking"]
+
+    K -.-> L["Gesture Recognition"]
+
+    L -.-> M["Human-Robot Interaction"]
+```
 
 
 ## Development Roadmap
