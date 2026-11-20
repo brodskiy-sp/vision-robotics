@@ -116,8 +116,8 @@ flowchart TD
 - [x] HSV color conversion.
 - [x] Color thresholding and binary masks.
 - [x] Color-based object isolation.
-- [ ] Contour detection.
-- [ ] Object center calculation.
+- [x] Contour detection.
+- [x] Object center calculation.
 - [ ] Real-time object tracking.
 
 ### Phase 3 — Hand Tracking
