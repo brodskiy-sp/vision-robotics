@@ -2,6 +2,8 @@
 #include <conio.h>
 #include <iostream>
 #include <chrono>
+#include <vector>
+#include <opencv2/geometry.hpp>
 
 int main(int argc, char* argv[])
 {
@@ -30,6 +32,7 @@ const std::string url = argv[1];
     cv::Mat greenOnly;
 double processingTime = 0.0;
 int framesProcessed = 0;
+int frameNumber = 1;
 auto start = std::chrono::steady_clock::now();
 bool maskSaved = false;
 while (cap.read(frame))
@@ -43,13 +46,70 @@ while (cap.read(frame))
     auto processStart = std::chrono::steady_clock::now();
 
 cv::cvtColor(frame, hsv, cv::COLOR_BGR2HSV);
-cv::inRange(hsv, cv::Scalar(35,50,50), cv::Scalar(85, 255, 255),mask);
+cv::inRange(hsv, cv::Scalar(30,50,50), cv::Scalar(85, 255, 255),mask);
 cv::bitwise_and(frame, frame, greenOnly, mask);
+std::vector<std::vector<cv::Point>> contours;
+
+cv::findContours(
+    mask,
+    contours,
+    cv::RETR_EXTERNAL,
+    cv::CHAIN_APPROX_SIMPLE
+);
+
+if (!contours.empty())
+{
+    int largestIndex = 0;
+    double largestArea = 0.0;
+
+    for (int i = 0; i < contours.size(); i++)
+    {
+        double area = cv::contourArea(contours[i]);
+
+        if (area > largestArea)
+        {
+            largestArea = area;
+            largestIndex = i;
+        }
+
+    }
+
+    std::cout << "Largest contour area: "
+              << largestArea << std::endl;
+cv::Moments M = cv::moments(contours[largestIndex]);
+
+	if (M.m00 > 0)
+	{
+		int centerX = static_cast<int>(M.m10 / M.m00);
+		int centerY = static_cast<int>(M.m01 / M.m00);
+
+	cv::circle(
+		frame,
+		cv::Point(centerX, centerY),
+		12,
+		cv::Scalar(0, 0, 255),
+		-1
+		);
+
+		std::cout << "Object center: "
+		<< centerX << ", "
+		<< centerY << std::endl;
+
+		std::cout << "Frame: " << frameNumber
+                << " | Center: "
+                << centerX << ", " << centerY
+                << std::endl;
+	}
+
+}
+
+std::cout << "Contours found: " << contours.size() << std::endl;
 if (!maskSaved)
 {
     cv::imwrite("green_only.png", greenOnly);
     cv::imwrite("original_frame.png", frame);
     cv::imwrite("green_mask.png", mask);
+    cv::imwrite("tracked_frame.png", frame);
     maskSaved = true;
     std::cout << "Mask saved!" << std::endl;
 }
@@ -71,7 +131,7 @@ processingTime +=
         break;
     }
 }
-
+frameNumber++;
 }
 auto end = std::chrono::steady_clock::now();
 
